@@ -12,8 +12,9 @@ echo "------------------------"
 # 提示用户输入运行模式
 echo "请选择运行模式："
 echo "1. 运行工具"
-echo "2. 运行注册工具程序"
-read -p "请输入数字 (1 或 2): " mode
+echo "2. 运行AT程序"
+echo "3. 运行DFW程序"
+read -p "请输入数字: " mode
 
 # 根据用户输入执行相应操作
 if [ "$mode" == "1" ]; then
@@ -47,6 +48,14 @@ elif [ "$mode" == "2" ]; then
         echo "无法启动"
         exit
     fi
+elif [ "$mode" == "3" ]; then
+    # 如果输入3则打开 !DFW.sh
+    if [ -f "tools/!DFW.sh" ]; then
+        bash tools/!DFW.sh
+    else
+        echo "无法启动"
+        exit
+    fi
 else
-    echo "无效的输入，请输入 1 或 2。"
+    echo "无效的输入"
 fi
