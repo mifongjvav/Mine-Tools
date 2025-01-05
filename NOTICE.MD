@@ -30,6 +30,16 @@ NOTICE
    - 描述：工具列表文件，列出了可用的工具及其描述。
    - 版权：© mifongjvav
 
+8. **语言文件**
+   - 描述：包含多语言支持的配置文件，用于提供不同语言的用户界面。
+   - 文件列表：
+     - `lang/zh_cn.lang`：简体中文语言文件
+     - `lang/zh_tw.lang`：繁体中文（台湾）语言文件
+     - `lang/zh_hk.lang`：繁体中文（香港）语言文件
+     - `lang/en_us.lang`：英文（美国）语言文件
+     - `lang/ja_jp.lang`：日文语言文件
+   - 版权：© mifongjvav
+
 本项目使用了以下第三方组件或资源：
 - **wget**：用于从远程服务器下载文件。
   - 许可证：GNU General Public License (GPL)
@@ -38,5 +48,9 @@ NOTICE
 - **unzip**：用于解压下载的压缩包。
   - 许可证：Info-ZIP License
   - 来源：http://infozip.sourceforge.net/
+
+- **部分代码或资源可能基于 Apache 2.0 许可证**：
+  - 本项目中的部分代码或资源可能使用了 Apache 2.0 许可证。Apache 2.0 许可证允许用户在遵守许可证条款的情况下自由使用、修改和分发代码。
+  - 许可证全文：https://www.apache.org/licenses/LICENSE-2.0
 
 本项目由 **mifongjvav** 开发和维护。如需了解更多信息，请联系作者。
