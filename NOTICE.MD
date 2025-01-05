@@ -2,7 +2,7 @@ NOTICE
 
 本项目包含以下文件和脚本，版权归作者所有。未经许可，不得擅自修改或分发。
 
-1. **MCT.sh**
+1. **MT.sh**
    - 描述：主脚本文件，用于初始化、下载必要文件、加载语言文件并提供工具选择功能。
    - 版权：© mifongjvav
 
@@ -48,9 +48,10 @@ NOTICE
 - **unzip**：用于解压下载的压缩包。
   - 许可证：Info-ZIP License
   - 来源：http://infozip.sourceforge.net/
-
-- **部分代码或资源可能基于 Apache 2.0 许可证**：
-  - 本项目中的部分代码或资源可能使用了 Apache 2.0 许可证。Apache 2.0 许可证允许用户在遵守许可证条款的情况下自由使用、修改和分发代码。
-  - 许可证全文：https://www.apache.org/licenses/LICENSE-2.0
-
+  
+- **中文MC Wiki**：提供部分工具的计算公式。
+  - 许可证：CC BY-NC-SA 3.0
+  - 来源：https://zh.minecraft.wiki
+  - 注：不是英文Wiki
+  
 本项目由 **mifongjvav** 开发和维护。如需了解更多信息，请联系作者。
