@@ -47,39 +47,6 @@ install_main() {
     unzip -oq "$TEMP_DIR/main.zip" -d "$TEMP_DIR"
     cp -rf "$TEMP_DIR/${REPO}-${MAIN_BRANCH}/"* "$install_dir/"
 }
-
-#######################################
-# 运行主脚本（修复版）
-#######################################
-run_main_script() {
-    local install_dir=$1
-    
-    # 检查脚本是否存在
-    if [ ! -f "$install_dir/$MAIN_SCRIPT" ]; then
-        echo "错误：未找到主脚本 $MAIN_SCRIPT"
-        return 1
-    fi
-    
-    # 检查临时执行路径
-    local temp_exec=""
-    if [ -f "$install_dir/.temp_exec_path" ]; then
-        temp_exec=$(cat "$install_dir/.temp_exec_path")
-    fi
-    
-    echo -e "\n正在启动 $MAIN_SCRIPT ..."
-    
-    # 尝试三种执行方式
-    if [ -n "$temp_exec" ] && [ -x "$temp_exec" ]; then
-        (cd "$(dirname "$temp_exec")" && exec "$temp_exec")
-    elif [ -x "$install_dir/$MAIN_SCRIPT" ]; then
-        (cd "$install_dir" && exec "./$MAIN_SCRIPT")
-    else
-        (cd "$install_dir" && sh "./$MAIN_SCRIPT")
-    fi
-    
-    # 清理临时文件
-    [ -n "$temp_exec" ] && rm -f "$temp_exec" "$install_dir/.temp_exec_path"
-}
  
 #######################################
 # 主流程
