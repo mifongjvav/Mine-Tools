@@ -1,9 +1,10 @@
 #!/bin/bash
 # MT.sh - 主程序入口
 # 版本: 4.2
+# 许可证: MIT
 
 source MT_C11_library.sh || {
-    echo "错误：无法加载基础库" >&2
+    echo "错误：无法正确引入C11库" >&2
     exit 1
 }
 

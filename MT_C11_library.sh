@@ -3,20 +3,10 @@
 # 版本: 4.2
 # 许可证: MIT
 
-#######################################
-# 初始化配置
-#######################################
-declare -g SCRIPT_URL="https://mifongjvav.github.io/MT.sh"
-declare -g LIBRARY_URL="https://mifongjvav.github.io/MT_C11_library.sh"
-declare -g TOOLS_DIR="./tools"
-declare -g UPDATE_TIMEOUT=15
-
-#######################################
-# 公告系统（已修复）
-#######################################
-declare -g NOTICE_FILE=".notice_cache"
-declare -g NOTICE_URL="https://mifongjvav.github.io/公告.txt"
-declare -g LAST_CHECK_FILE=".last_notice_check"
+source MT_CFG_library.sh || {
+    echo "错误：无法正确引入C11库前置CFG库" >&2
+    exit 1
+}
 
 check_notice() {
     # 24小时内不重复检查
@@ -51,22 +41,16 @@ show_notice() {
     rm -f "$NOTICE_FILE"
 }
 
-#######################################
-# 目录浏览功能（纯净版）
-#######################################
-declare -g CURRENT_BROWSE_PATH="$TOOLS_DIR"
-declare -g -a CURRENT_ITEMS=()
-
 generate_dir_list() {
     CURRENT_ITEMS=()
     local counter=1
     
     # 返回上级选项
-    [ "$CURRENT_BROWSE_PATH" != "$TOOLS_DIR" ] && echo "0. ↩ 返回上级"
+    [ "$CURRENT_BROWSE_PATH" != "$CURRENT_BROWSE_PATH" ] && echo "0. ↩ 返回上级"
 
     # 先显示目录
     while IFS= read -r dir; do
-        echo "$counter. 📁 $(basename "$dir")"
+        echo "$counter. $FOLDER $(basename "$dir")"
         CURRENT_ITEMS+=("$dir")
         ((counter++))
     done < <(find "$CURRENT_BROWSE_PATH" -maxdepth 1 -mindepth 1 -type d | sort)
@@ -74,10 +58,10 @@ generate_dir_list() {
     # 再显示脚本文件（排除!开头的系统脚本）
     while IFS= read -r file; do
         local name=$(basename "$file" .sh)
-        echo "$counter. 📄 $name"
+        echo "$counter. $FILE $name"
         CURRENT_ITEMS+=("$file")
         ((counter++))
-    done < <(find "$CURRENT_BROWSE_PATH" -maxdepth 1 -mindepth 1 -type f -name "*.sh" ! -name "!*" | sort)
+    done < <(find "$CURRENT_BROWSE_PATH" -maxdepth 1 -mindepth 1 -type f -name "$FE" ! -name "$L2F" | sort)
 }
 
 handle_selection() {
@@ -110,81 +94,15 @@ handle_selection() {
 }
 
 #######################################
-# 更新功能
-#######################################
-safe_download() {
-    if ! curl -s --connect-timeout $UPDATE_TIMEOUT --retry 2 "$1" -o "$2"; then
-        echo "下载失败: $1" >&2
-        return 1
-    fi
-    return 0
-}
-
-check_update() {
-    echo "正在检查更新..."
-    safe_download "$SCRIPT_URL" "MT.sh.tmp" && {
-        if [ -f "MT.sh" ] && ! cmp -s "MT.sh" "MT.sh.tmp"; then
-            mv "MT.sh" "MT.sh.bak"
-            mv "MT.sh.tmp" "MT.sh"
-            chmod +x "MT.sh"
-            echo "更新完成，请重新运行"
-            exit 0
-        fi
-        rm -f "MT.sh.tmp"
-        echo "当前已是最新版本"
-    }
-}
-
-#######################################
-# 库更新功能
-#######################################
-update_library() {
-    echo "正在检查库更新..."
-    
-    # 下载新版库文件
-    if ! curl -s --connect-timeout 10 "$LIBRARY_URL" -o "MT_C11_library.tmp"; then
-        echo "错误：无法下载库文件"
-        return 1
-    fi
-
-    # 检查版本号是否更新
-    local current_ver=$(grep -m1 "^# 版本:" "MT_C11_library.sh" | awk '{print $3}')
-    local new_ver=$(grep -m1 "^# 版本:" "MT_C11_library.tmp" | awk '{print $3}')
-    
-    if [[ "$current_ver" == "$new_ver" ]]; then
-        echo "已是最新版本 (v$current_ver)"
-        rm -f "MT_C11_library.tmp"
-        return 0
-    fi
-
-    # 执行更新
-    echo "发现新版本: v$current_ver -> v$new_ver"
-    echo "正在更新库文件..."
-    
-    # 创建备份
-    cp "MT_C11_library.sh" "MT_C11_library.sh.bak" && \
-    mv "MT_C11_library.tmp" "MT_C11_library.sh" && \
-    chmod +x "MT_C11_library.sh" || {
-        echo "更新失败！已恢复备份"
-        mv "MT_C11_library.sh.bak" "MT_C11_library.sh"
-        return 1
-    }
-
-    echo "库更新成功！"
-    echo "请重新运行主程序加载新版本"
-    return 2  # 需要重启的特殊返回码
-}
-
-#######################################
 # 初始化
 #######################################
-mkdir -p "$TOOLS_DIR"
+mkdir -p "$CURRENT_BROWSE_PATH"
 
 run_tool_mode() {
     local ret=0
     while true; do
         clear
-        echo "=== 浏览目录: ${CURRENT_BROWSE_PATH/$TOOLS_DIR\//} ==="
+        echo "=== 浏览目录: ${CURRENT_BROWSE_PATH/$CURRENT_BROWSE_PATH\//} ==="
         
         generate_dir_list
         echo "----------------------"
@@ -194,7 +112,7 @@ run_tool_mode() {
         
         case "$choice" in
             x) 
-                CURRENT_BROWSE_PATH="$TOOLS_DIR"
+                CURRENT_BROWSE_PATH="$CURRENT_BROWSE_PATH"
                 PATH_STACK=()
                 return
                 ;;
@@ -218,29 +136,16 @@ main_menu() {
         echo "=== Mine Tools 4.2 ==="
         echo "1. 运行工具"
         echo "2. 运行DFW下载器"
-        echo "3. 检查主程序更新"
-        echo "4. 检查C11 API "
-        echo "5. 退出"
+        echo "3. 运行MTUpdater"
+        echo "4. 退出"
         
         read -p "请选择: " choice
         case "$choice" in
             1) run_tool_mode ;;
-            2) bash "$TOOLS_DIR/!DFW.sh" ;;
-            3) check_update ;;
-            4)
-                update_library
-                case $? in
-                    2) 
-                        read -p "库已更新，按回车键退出程序..."
-                        exit 0
-                        ;;
-                    1)
-                        read -p "更新失败，按回车键返回..."
-                        ;;
-                esac
-                ;;
-            5) 
-                echo "See ya next time!"
+            2) bash "$CURRENT_BROWSE_PATH/!DFW.sh" ;;
+            3) bash "$SCRIPT_URL" ;;
+            4) 
+                echo "See you next time!"
                 exit 0
                 ;;
             *) 
