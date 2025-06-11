@@ -64,12 +64,13 @@ Mine Tools 是一个模块化的 Bash 脚本工具箱，提供灵活的工具管
 
 ### 如何下载
 
-1. 如果你可以通过浏览器访问github，使用Releases里面的MTUpdater下载
-2. 直接
+在终端输入
    ```bash
    git clone https://github.com/mifongjvav/Mine-Tools.git
    ```
 * 需要你的设备安装了git
+
+或者下载仓库自己解压
 
 ### 基本操作
 
