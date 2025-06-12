@@ -119,5 +119,3 @@ tools/
 ## 许可证
 
 MIT LICENSE
-
-> 提示：DFW 下载器 (!DFW.sh) 需要单独放置在 tools/ 目录下才能被主程序调用
