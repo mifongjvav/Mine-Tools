@@ -136,15 +136,13 @@ main_menu() {
         echo "=== Mine Tools 4.2 ==="
         echo "1. 运行工具"
         echo "2. 运行DFW下载器"
-        echo "3. 运行MTUpdater"
-        echo "4. 退出"
+        echo "3. 退出"
         
         read -p "请选择: " choice
         case "$choice" in
             1) run_tool_mode ;;
             2) bash "$CURRENT_BROWSE_PATH/!DFW.sh" ;;
-            3) bash "$SCRIPT_URL" ;;
-            4) 
+            3) 
                 echo "See you next time!"
                 exit 0
                 ;;
